@@ -4,26 +4,43 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Math.Rect;
+import com.mygdx.game.Utils.Regions;
 
 public class Sprite extends Rect {
-
     protected float angle;
     protected float scale = 1;
-
     protected TextureRegion[] regions;
     protected int frame;
 
     public Sprite(TextureRegion region) {
-         regions = new TextureRegion[1];
-         regions[0] = region;
+        regions = new TextureRegion[1];
+        regions[0] = region;
     }
 
-    public void resize(Rect worldBound){
+    public Sprite(TextureRegion region, int rows, int cols, int frame){
+        this.regions = Regions.split(region,rows,cols,frame);
+    }
+
+    public void setHeightProportion(float height) {
+        setHeight(height);
+        float aspect = regions[frame].getRegionWidth() / (float) regions[frame].getRegionHeight();
+        setWidth(height * aspect);
+    }
+
+    public void resize(Rect worldBounds) {
 
     }
 
-    public void update(float deltaTime){
+    public void update(float delta) {
 
+    }
+
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        return false;
+    }
+
+    public boolean touchUp(Vector2 touch, int pointer, int button) {
+        return false;
     }
 
     public float getAngle() {
@@ -42,26 +59,14 @@ public class Sprite extends Rect {
         this.scale = scale;
     }
 
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch) {
         batch.draw(
-                regions[frame],getLeft(),getBottom(),
-                halfWidth,halfHeight,getWidth(),getHeight(),
-                scale,scale,angle
+                regions[frame],
+                getLeft(), getBottom(),
+                halfWidth, halfHeight,
+                getWidth(), getHeight(),
+                scale, scale,
+                angle
         );
-
-    }
-
-    public boolean touchDown(Vector2 touch, int pointer, int button){
-        return false;
-    }
-
-    public boolean touchUp(Vector2 touch,int pointer, int button){
-        return false;
-    }
-
-    public void setHeightProportion(float height){
-        setHeight(height);
-        float aspect = regions[frame].getRegionWidth()/(float) regions[frame].getRegionHeight();
-        setWidth(height*aspect);
     }
 }
