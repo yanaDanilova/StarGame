@@ -1,6 +1,7 @@
 package com.mygdx.game.Sprite;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -10,6 +11,11 @@ import com.mygdx.game.Pool.BulletPool;
 
 public class MainShip extends Sprite {
 
+
+
+
+
+    private static final float RELOAD_INTERVAL = 0.2f;
     private static final float HEIGHT = 0.15f;
     private static final float BOTTOM_MARGIN = 0.05f;
     private static final int INVALID_POINTER = -1;
@@ -31,8 +37,12 @@ public class MainShip extends Sprite {
     private int rightPointer = INVALID_POINTER;
 
     private Rect worldBounds;
+    private float reloadTimer;
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
+    private final Sound bulletSound;
+
+
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
         bulletRegion = atlas.findRegion("bulletMainShip");
@@ -40,6 +50,7 @@ public class MainShip extends Sprite {
         bulletPos = new Vector2();
         bulletHeight = 0.01f;
         bulletDamage = 1;
+        this.bulletSound = bulletSound;
     }
 
     @Override
@@ -52,6 +63,13 @@ public class MainShip extends Sprite {
     @Override
     public void update(float delta) {
         pos.mulAdd(v, delta);
+
+        reloadTimer+= delta;
+        if(reloadTimer >= RELOAD_INTERVAL){
+            reloadTimer = 0f;
+            shoot();
+        }
+
 
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
@@ -160,5 +178,6 @@ public class MainShip extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bulletPos.set(pos.x, pos.y + getHalfHeight());
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, bulletDamage);
+        bulletSound.play();
     }
 }
