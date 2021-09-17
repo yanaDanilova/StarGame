@@ -58,10 +58,15 @@ public class Ship extends Sprite {
         }
     }
 
+    public int getHp() {
+        return hp;
+    }
+
     @Override
     public void destroy() {
         super.destroy();
         boom();
+
     }
 
     public void damage(int damage) {
