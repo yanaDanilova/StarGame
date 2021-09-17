@@ -59,13 +59,10 @@ public class EnemyShip extends Ship {
         setHeightProportion(height);
         this.hp = hp;
         v.set(START_V);
+        reloadTimer=0;
     }
 
-    @Override
-    public void destroy() {
-        super.destroy();
-        reloadTimer = 0f;
-    }
+
 
     public boolean isCollision(Rect rect) {
         return !(
